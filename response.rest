@@ -1,0 +1,43 @@
+### Authentication
+POST  http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "name": "Josh",
+  "email": "admin22@example.com",
+  "password": "password"
+}
+###
+POST  http://localhost:3000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Josh",
+  "email": "admin22@example.com",
+  "password": "password"
+}
+
+#########################################################
+
+### Jobs API
+GET http://localhost:3000/api/v1/jobs/
+
+###
+GET  http://localhost:3000/api/v1/jobs/1
+
+### 
+POST  http://localhost:3000/api/v1/jobs/
+Content-Type: application/json
+
+{
+  "company": "Google",
+  "position": "Part time",
+  "status": "interview",
+  "createdBy": ""
+}
+### 
+DELETE  http://localhost:3000/api/v1/jobs/test
+
+
+###
+PATCH  http://localhost:3000/api/v1/jobs/1
