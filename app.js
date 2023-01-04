@@ -1,36 +1,50 @@
+require("dotenv").config();
+require("express-async-errors");
+
+// extra security packages
+const helmet = require("helmet");
+const cors = require("cors");
+const xss = require("xss-clean");
+const rateLimiter = require("express-rate-limit");
+
 const express = require("express");
 const app = express();
-require("dotenv").config();
 
-// connectDB
 const connectDB = require("./db/connect");
-
-// Router
-const authRouter = require("./routers/auth");
-const jobRouter = require("./routers/job");
-
-// Error handler
 const authenticateUser = require("./middleware/unauthenticated");
+// routers
+const authRouter = require("./routers/auth");
+const jobsRouter = require("./routers/job");
+// error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
-// Middlewares
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 app.use(express.json());
+app.use(helmet());
+app.use(cors());
+app.use(xss());
 
-// Routes
+// routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", authenticateUser, jobRouter);
+app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(PORT, () =>
-      console.log(`Server is lisining on port ${PORT}...`)
+    app.listen(port, () =>
+      console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
     console.log(error);
