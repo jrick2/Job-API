@@ -11,7 +11,7 @@ const express = require("express");
 const app = express();
 
 const connectDB = require("./db/connect");
-const authenticateUser = require("./middleware/unauthenticated");
+const authenticateUser = require("./middleware/authentication");
 // routers
 const authRouter = require("./routers/auth");
 const jobsRouter = require("./routers/job");
